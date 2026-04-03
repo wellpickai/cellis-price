@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>셀이즈랩 수가표</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161d;
+    --surface2: #1a1e28;
+    --border: #252b38;
+    --accent: #c8a96e;
+    --accent2: #e8d5a8;
+    --text: #e8e4dc;
+    --text-dim: #8a8a8a;
+    --text-muted: #555a66;
+    --sale: #7ec8a0;
+    --sale-bg: rgba(126,200,160,0.08);
+    --normal: #8499b8;
+    --tag-bg: rgba(200,169,110,0.12);
+    --shadow: 0 8px 40px rgba(0,0,0,0.6);
+    --pink: #e8849a;
+    --pink-tag-bg: rgba(232,132,154,0.12);
+    --pink-border: rgba(232,132,154,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Serif KR', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; left: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(126,200,160,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 60px 0 50px;
+    position: relative;
+  }
+
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .header h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .header h1 strong {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .header-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent), transparent);
+    margin: 24px auto;
+  }
+
+  .date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    background: var(--sale);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* Notice */
+  .notice {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+
+  .notice-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .notice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .notice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .notice-item .icon {
+    color: var(--accent);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s forwards;
+  }
+
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.3s; }
+  .section:nth-child(5) { animation-delay: 0.4s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .section-tag.green {
+    background: var(--sale);
+  }
+
+  .section-tag.blue {
+    background: var(--normal);
+  }
+
+  .section-tag.pink {
+    background: var(--pink);
+  }
+
+  .cat-label.pink {
+    color: var(--pink);
+    background: var(--pink-tag-bg);
+    border-color: var(--pink-border);
+  }
+
+  .price-pkg {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--pink);
+    text-align: right;
+  }
+
+  .chapter-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 56px 0 40px;
+  }
+
+  .chapter-divider::before,
+  .chapter-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+  }
+
+  .chapter-divider::before { background: linear-gradient(to right, transparent, var(--border)); }
+  .chapter-divider::after  { background: linear-gradient(to left,  transparent, var(--border)); }
+
+  .chapter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .section-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  /* Table */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th {
+    padding: 14px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-align: left;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  thead th.right { text-align: right; }
+  thead th.center { text-align: center; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  td {
+    padding: 15px 18px;
+    font-size: 14px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  td.right { text-align: right; }
+  td.center { text-align: center; }
+
+  .cat-label {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+    background: var(--tag-bg);
+    border: 1px solid rgba(200,169,110,0.2);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .product-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .product-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 3px;
+    font-weight: 300;
+  }
+
+  .volume {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .area {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .price-normal {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--normal);
+    text-align: right;
+  }
+
+  .price-normal.strike {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .price-sale {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--sale);
+    text-align: right;
+  }
+
+  .price-only {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--accent);
+    text-align: right;
+  }
+
+  .note {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .note strong {
+    color: var(--accent);
+  }
+
+  /* Row span helper */
+  .group-row td:first-child {
+    border-left: 2px solid var(--accent);
+  }
+
+  .discount-badge {
+    display: inline-block;
+    background: rgba(126,200,160,0.1);
+    border: 1px solid rgba(126,200,160,0.2);
+    color: var(--sale);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 0;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  .footer-line {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 auto 16px;
+  }
+
+  /* Print button */
+  .toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+
+  .btn.primary:hover {
+    background: var(--accent2);
+    color: var(--bg);
+  }
+
+  @media print {
+    body { background: white; color: black; padding: 20px; }
+    body::before, body::after { display: none; }
+    .toolbar { display: none; }
+    .table-wrap { border: 1px solid #ddd; }
+    thead tr { background: #f5f5f5; }
+    .section { opacity: 1; transform: none; animation: none; }
+    .date-badge { background: #f0f0f0; border-color: #ccc; color: #555; }
+    .notice { background: #fafafa; border-color: #ddd; }
+    .cat-label { background: #f5e8d0; color: #8a6a2a; border-color: #d4a853; }
+    .price-sale { color: #2a7a4a; }
+    .price-normal.strike { color: #999; }
+    .price-only { color: #8a6a2a; }
+  }
+
+  @media (max-width: 600px) {
+    .notice-grid { grid-template-columns: 1fr; }
+    td, th { padding: 12px 12px; font-size: 13px; }
+    .section-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="header-tag">Price List</span>
+    <h1>셀이즈랩 <strong>수가표</strong></h1>
+    <div class="header-line"></div>
+    <div class="date-badge">
+      <span class="dot"></span>
+      2025년 3월 기준
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="btn" onclick="window.print()">🖨 인쇄</button>
+    <button class="btn primary" onclick="copyLink()">🔗 링크 복사</button>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice section">
+    <div class="notice-title">📢 공통 안내 사항</div>
+    <div class="notice-grid">
+      <div class="notice-item">
+        <span class="icon">💰</span>
+        <span>부가세(VAT) 별도</span>
+      </div>
+      <div class="notice-item">
+        <span class="icon">💤</span>
+        <span>수면 시술 +20만 원 추가</span>
+      </div>
+      <div class="notice-item">
+        <span class="icon">🔄</span>
+        <span>행사가 적용 시 환불 불가</span>
+      </div>
+      <div class="notice-item">
+        <span class="icon">➕</span>
+        <span>기본 구성 외 부위 추가 시 1군데당 50만 원 추가</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 1: MCT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">MCT</span>
+      <span class="section-title">지방줄기세포 (MCT)</span>
+      <span class="section-sub">일반 MCT · 미라셀 MCT · PRF</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>상품명</th>
+            <th>용량</th>
+            <th>시술 부위</th>
+            <th class="right">정상가</th>
+            <th class="right">행사가</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label">일반 MCT<br><small>p.mct</small></span></td>
+            <td><div class="product-name">체험판</div></td>
+            <td><span class="volume">60cc</span></td>
+            <td><span class="area">얼굴 / IV / 통증 중 택 1</span></td>
+            <td class="price-normal strike right">200만</td>
+            <td class="price-sale right">150만</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">일반 120</div></td>
+            <td><span class="volume">120cc</span></td>
+            <td><span class="area">IV + [얼굴 / 통증 중 택 1]</span></td>
+            <td class="price-normal strike right">450만</td>
+            <td class="price-sale right">250만</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">일반 240</div></td>
+            <td><span class="volume">240cc</span></td>
+            <td><span class="area">IV + [얼굴 / 통증 중 택 1]</span></td>
+            <td class="price-normal strike right">700만</td>
+            <td class="price-sale right">350만</td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">미라셀 MCT<br><small>m.mct</small></span></td>
+            <td><div class="product-name">미라셀 120</div></td>
+            <td><span class="volume">120cc</span></td>
+            <td><span class="area">IV + [얼굴 / 통증 중 택 1]</span></td>
+            <td class="price-normal strike right">850만</td>
+            <td class="price-sale right">450만</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">미라셀 240</div></td>
+            <td><span class="volume">240cc</span></td>
+            <td><span class="area">IV + [얼굴 / 통증 중 택 1]</span></td>
+            <td class="price-normal strike right">1,200만</td>
+            <td class="price-sale right">700만</td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">PRF</span></td>
+            <td><div class="product-name">PRF 단독</div></td>
+            <td><span class="volume">120cc</span></td>
+            <td><span class="area">IV 전용 또는 얼굴 전용</span></td>
+            <td class="price-normal right">—</td>
+            <td class="price-sale right">250만</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">PRF 혼합</div></td>
+            <td><span class="volume">—</span></td>
+            <td><span class="area">IV + [얼굴 / 통증 중 택 1]</span></td>
+            <td class="price-normal right">—</td>
+            <td class="price-sale right">350만</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 2: SVF -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag green">SVF</span>
+      <span class="section-title">SVF · 지방이식 · 뱅킹</span>
+      <span class="section-sub">줄기세포 고농축 치료</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>항목</th>
+            <th>구성 / 조건</th>
+            <th class="right">가격</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label">SVF</span></td>
+            <td><div class="product-name">종합 패키지</div></td>
+            <td><span class="area">IV + [얼굴 / 통증 중 택 1]</span></td>
+            <td class="price-only right">799만</td>
+            <td><span class="note"><strong>정상가</strong> 1,500만</span></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">집중 치료</div></td>
+            <td><span class="area">얼굴 또는 통증 (1회)</span></td>
+            <td class="price-only right">400만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">집중 치료</div></td>
+            <td><span class="area">얼굴 또는 통증 (2회)</span></td>
+            <td class="price-only right">600만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">IV 단독</div></td>
+            <td><span class="area">줄기세포 정맥주사</span></td>
+            <td class="price-only right">600만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">지방이식</span></td>
+            <td><div class="product-name">나노 지방이식</div></td>
+            <td><span class="area">한 부위</span></td>
+            <td class="price-only right">150만</td>
+            <td><span class="note">SVF 진행 시 흡입비(300만) 면제</span></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">풀페이스</div></td>
+            <td><span class="area">전체 얼굴</span></td>
+            <td class="price-only right">500만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">뱅킹</span></td>
+            <td><div class="product-name">지방 뱅킹</div></td>
+            <td><span class="area">5년 보관</span></td>
+            <td class="price-only right">200만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">지방 뱅킹</div></td>
+            <td><span class="area">10년 보관</span></td>
+            <td class="price-only right">300만</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 3: 제대혈·시크리톰·NAD+ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag blue">기타</span>
+      <span class="section-title">제대혈 · 시크리톰 · NAD+</span>
+      <span class="section-sub">재생 · 항노화 프로그램</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>상품명</th>
+            <th class="center">용량 / 횟수</th>
+            <th class="right">가격</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label">제대혈</span></td>
+            <td><div class="product-name">제대줄기세포 + NMN</div></td>
+            <td class="center"><span class="volume">2cc</span></td>
+            <td class="price-only right">200만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="center"><span class="volume">4cc</span></td>
+            <td class="price-only right">300만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">시크리톰</span></td>
+            <td><div class="product-name">통증 또는 얼굴</div></td>
+            <td class="center"><span class="volume">2cc</span></td>
+            <td class="price-only right">100만</td>
+            <td>
+              <span class="note">3회 이상: 10% 할인</span>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="center"><span class="volume">4cc</span></td>
+            <td class="price-only right">150만</td>
+            <td>
+              <span class="note">10회 이상: 15% 할인</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="cat-label">NAD+</span></td>
+            <td><div class="product-name">NAD+ 수액</div></td>
+            <td class="center"><span class="volume">1회</span></td>
+            <td class="price-only right">35만</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="center"><span class="volume">3회</span></td>
+            <td class="price-only right">90만</td>
+            <td><span class="note">회당 30만 원 꼴</span></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="center"><span class="volume">10회</span></td>
+            <td class="price-only right">250만</td>
+            <td><span class="note">회당 25만 원 꼴</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Chapter Divider -->
+  <div class="chapter-divider">
+    <span class="chapter-label">피부과 수가</span>
+  </div>
+
+  <!-- Section: 보톡스 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag pink">보톡스</span>
+      <span class="section-title">보톡스</span>
+      <span class="section-sub">주름 · 윤곽 · 바디 · 스킨</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>시술명</th>
+            <th>부위 / 용량</th>
+            <th class="right">진료비 1회</th>
+            <th class="right">진료비 PKG</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label pink">보톡스</span></td>
+            <td><div class="product-name">주름보톡스</div></td>
+            <td><span class="area">1부위</span></td>
+            <td class="price-only right">85,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td><span class="area">4부위</span></td>
+            <td class="price-only right">280,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">윤곽</div></td>
+            <td><span class="area">사각턱</span></td>
+            <td class="price-only right">110,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">바디보톡스</div></td>
+            <td><span class="area">종아리 / 승모근</span></td>
+            <td class="price-only right">300,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">스킨보톡스</div></td>
+            <td><span class="area">얼굴전체</span></td>
+            <td class="price-only right">300,000</td>
+            <td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section: 필러 · 리쥬란 · 물광주사 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag pink">필러 · 리쥬란</span>
+      <span class="section-title">필러 · 리쥬란 · 물광주사</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>시술명</th>
+            <th>부위 / 용량</th>
+            <th class="right">진료비 1회</th>
+            <th class="right">진료비 PKG</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label pink">필러</span></td>
+            <td><div class="product-name">특수부위필러</div></td>
+            <td><span class="area">눈밑 애교살 1cc</span></td>
+            <td class="price-only right">350,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">볼륨필러</div></td>
+            <td><span class="area">이마, 볼, 광대 2cc</span></td>
+            <td class="price-only right">550,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">입술필러</div></td>
+            <td><span class="volume">2cc</span></td>
+            <td class="price-only right">550,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label pink">리쥬란</span></td>
+            <td><div class="product-name">리쥬란힐러</div></td>
+            <td><span class="volume">2cc</span></td>
+            <td class="price-only right">600,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">리쥬란HB</div></td>
+            <td><span class="volume">2cc</span></td>
+            <td class="price-only right">1,000,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label pink">물광주사</span></td>
+            <td><div class="product-name">더마샤인</div></td>
+            <td><span class="area">얼굴전체</span></td>
+            <td class="price-only right">300,000</td>
+            <td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section: 지방분해주사 · 닥터콜라겐 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag pink">주사 치료</span>
+      <span class="section-title">지방분해주사 · 닥터콜라겐</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>시술명</th>
+            <th>부위 / 용량</th>
+            <th class="right">진료비 1회</th>
+            <th class="right">진료비 PKG</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label pink">지방분해주사</span></td>
+            <td><div class="product-name">이중턱</div></td>
+            <td><span class="volume">20cc</span></td>
+            <td class="price-only right">350,000</td>
+            <td class="price-pkg right">1,500,000 / 5회</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">브라라인</div></td>
+            <td><span class="volume">20cc</span></td>
+            <td class="price-only right">350,000</td>
+            <td class="price-pkg right">1,500,000 / 5회</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">팔뚝살 / 허벅지 안쪽</div></td>
+            <td><span class="volume">20cc</span></td>
+            <td class="price-only right">350,000</td>
+            <td class="price-pkg right">1,500,000 / 5회</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label pink">닥터콜라겐</span></td>
+            <td><div class="product-name">얼굴전체</div></td>
+            <td><span class="area">콜라겐, 히알루론산</span></td>
+            <td class="price-only right">550,000</td>
+            <td class="price-pkg right">2,000,000 / 4회</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td><span class="area">PN</span></td>
+            <td class="price-only right">770,000</td>
+            <td class="price-pkg right">2,500,000 / 4회</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section: 셀이즈 리프팅 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag pink">리프팅</span>
+      <span class="section-title">셀이즈 리프팅</span>
+      <span class="section-sub">텐써마 · 텐쎄라 · 더블로 · 실리프팅</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>시술명</th>
+            <th>부위 / 샷수</th>
+            <th class="right">진료비 1회</th>
+            <th class="right">진료비 PKG</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label pink">셀이즈 리프팅</span></td>
+            <td><div class="product-name">텐써마</div></td>
+            <td><span class="area">얼굴 600샷</span></td>
+            <td class="price-only right">1,700,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td><span class="area">눈가 200샷</span></td>
+            <td class="price-only right">700,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">텐쎄라 / 초음파레이저</div></td>
+            <td><span class="area">600샷</span></td>
+            <td class="price-only right">1,000,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">더블로</div></td>
+            <td><span class="area">풀페이스 400샷</span></td>
+            <td class="price-only right">600,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">실리프팅</div></td>
+            <td><span class="area">코그실 4줄</span></td>
+            <td class="price-only right">1,400,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td><span class="area">코그실 8줄</span></td>
+            <td class="price-only right">1,700,000</td>
+            <td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section: 미백 · 기타 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag pink">미백 · 기타</span>
+      <span class="section-title">미백 · 고압산소 · 맞춤수액</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>시술명</th>
+            <th>부위 / 조건</th>
+            <th class="right">진료비 1회</th>
+            <th class="right">진료비 PKG</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-label pink">미백</span></td>
+            <td><div class="product-name">토닝레이저</div></td>
+            <td><span class="area">얼굴전체</span></td>
+            <td class="price-only right">200,000</td>
+            <td class="price-pkg right">850,000 / 5회<br>1,800,000 / 10회</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">카본레이저</div></td>
+            <td><span class="area">얼굴전체</span></td>
+            <td class="price-only right">300,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div class="product-name">골드PPT</div></td>
+            <td><span class="area">얼굴전체</span></td>
+            <td class="price-only right">350,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label pink">고압산소</span></td>
+            <td><div class="product-name">고압산소챔버</div></td>
+            <td><span class="area">1회 / 30분</span></td>
+            <td class="price-only right">550,000</td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td><span class="cat-label pink">맞춤수액</span></td>
+            <td><div class="product-name">개인 맞춤 수액</div></td>
+            <td><span class="area">면역 / 영양 / 화이트닝</span></td>
+            <td class="price-only right">150,000~</td>
+            <td colspan="2"><span class="note">맞춤형 수액 진료</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-line"></div>
+    셀이즈랩 &nbsp;·&nbsp; 2025.03 기준 &nbsp;·&nbsp; VAT 별도
+  </div>
+
+</div>
+
+<script>
+  function copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.querySelector('.btn.primary');
+      const orig = btn.textContent;
+      btn.textContent = '✓ 복사됨!';
+      btn.style.background = 'var(--sale)';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+      }, 2000);
+    }).catch(() => {
+      prompt('아래 주소를 복사하세요:', url);
+    });
+  }
+</script>
+
+</body>
+</html>
